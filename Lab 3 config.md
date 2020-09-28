@@ -1,6 +1,6 @@
-Lab 3
+# Lab 3
 
-Config ip estática en servidor
+### Config ip estática en servidor
 ![dc815cb29b7b68501575a72f8b935f2c.png](./_resources/b540409cf510476390272057eadc66f6.png)
 
 > Para copiar
@@ -25,7 +25,7 @@ Config ip estática en servidor
 
 >Cambiar a mirror global
 `sudo sed -i 's|http://co.|http://|g' /etc/apt/sources.list`
-O a mano modificar el archivo en: 
+O a mano modificar el archivo en:
 `sudo nano /etc/apt/sources.list`
 `sudo apt-get update`
 * * *
@@ -38,6 +38,7 @@ O a mano modificar el archivo en:
 * * *
 > Conexión vía SSH
 `ssh infracom@192.168.1.133`
+
 `exit` para salir
 
 * * *
