@@ -31,18 +31,19 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 break
 
         hash = s.recv(4096)
-        print(f'Received Hash: {hash}')
+        print(f'Received Hash: {hash.decode()}')
 
         break
+    video1.close()
     s.close()
 
-with open("./save_content/video1.mkv", "rb") as video:
-    hashing = sha256()
-
-    l = video.read(4096) # Read from the file. Take in the amount declared above
-    while l: # While there is still data being read from the file
-        hashing.update(l) # Update the hash
-        l = video.read(4096)
-    hash = hashing.hexdigest()
-    hash = str.encode(hash)
-    print(f'Calculated Hash: {hash}')
+# with open("./save_content/video1.mkv", "rb") as video:
+#     hashing = sha256()
+#
+#     l = video.read(4096)  # Read from the file. Take in the amount declared above
+#     while l:  # While there is still data being read from the file
+#         hashing.update(l)  # Update the hash
+#         l = video.read(4096)
+#     hash = hashing.hexdigest()
+#     hash = str.encode(hash)
+#     print(f'Calculated Hash: {hash}')
