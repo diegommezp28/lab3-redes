@@ -1,6 +1,6 @@
 import socket   
 
-HOST = ''                 # Symbolic name meaning all available interfaces
+HOST = 'localhost'                 # Symbolic name meaning all available interfaces
 PORT = 50007  # Arbitrary non-privileged port
 
 video1 = open("./video1.mkv", "rb")
