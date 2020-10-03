@@ -22,7 +22,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             l = video1.read(4096)
             while l:
                 conn.send(l)
-                hashing.update(video1)
+                hashing.update(l)
                 i += 1
                 print(i)
                 l = video1.read(4096)
