@@ -1,8 +1,9 @@
-import socket   
+import socket
+from hashlib import sha256
 
 HOST = ''                 # Symbolic name meaning all available interfaces
 PORT = 50007  # Arbitrary non-privileged port
-
+hashing = sha256()
 video1 = open("./video1.mkv", "rb")
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -24,6 +25,13 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 print(i)
                 l = video1.read(4096)
             break
+
+        hashing.update(video1)
+        hash = hashing.hexdigest()
+
+        conn.send(b'hash')
+        conn.send(hash)
+
         conn.close()
     s.close()
             # if not data: break
