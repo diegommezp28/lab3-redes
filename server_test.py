@@ -15,10 +15,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         print('Connected by', addr)
 
         l = video1.read(4096)
-        conn.send('OK')
+        conn.send(b'OK')
         while True:
             data = conn.recv(4096)
-            print('data rcvd')
+            print(data)
             while l:
                 s.send(l)
                 i += 1
