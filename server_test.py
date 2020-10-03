@@ -28,12 +28,13 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 l = video1.read(4096)
             break
 
-        hash = hashing.hexdigest()
-
         conn.send(b'hash')
+
+        hash = hashing.hexdigest()
         conn.send(str.encode(hash))
 
         print(f'Sent Hash: {hash}')
+
         conn.close()
     s.close()
             # if not data: break
