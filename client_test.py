@@ -4,15 +4,16 @@ import socket
 HOST = '192.168.1.133'    # The remote host
 PORT = 50007  # The same port as used by the server
 
-video1 = open("./save_content/video1.mkv", "a+")
+video1 = open("./save_content/video1.mkv", "wb")
 
 
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect((HOST, PORT))
-    s.sendall(b'Hello, world')
     data = s.recv(4096)
     print('Received', repr(data))
+
+    s.sendall(b'Hello, world')
 
     i = 0
     while True:

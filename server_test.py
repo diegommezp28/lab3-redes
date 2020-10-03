@@ -7,13 +7,12 @@ video1 = open("./video1.mkv", "rb")
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.bind((HOST, PORT))
-    s.listen(1)
+    s.listen(20)
     conn, addr = s.accept()
 
     i = 0
     with conn:
         print('Connected by', addr)
-
         l = video1.read(4096)
         conn.send(b'OK')
         while True:
@@ -25,7 +24,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 print(i)
                 l = video1.read(4096)
             break
-#        conn.close()
- #   s.close()
+        conn.close()
+    s.close()
             # if not data: break
             # conn.sendall(data)
