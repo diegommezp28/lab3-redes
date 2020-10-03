@@ -18,7 +18,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     while True:
         l = s.recv(4096)
         i+=1
-        print(i)
+        print(l)
         while l:
             video1.write(l)
             l = s.recv(4096)

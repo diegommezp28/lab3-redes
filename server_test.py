@@ -15,6 +15,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         print('Connected by', addr)
 
         l = video1.read(4096)
+        conn.send('OK')
         while True:
             data = conn.recv(4096)
             print('data rcvd')
