@@ -31,8 +31,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         hash = hashing.hexdigest()
 
         conn.send(b'hash')
-        conn.send(hash)
+        conn.send(str.encode(hash))
 
+        print(f'Sent Hash: {hash}')
         conn.close()
     s.close()
             # if not data: break

@@ -31,7 +31,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 break
 
         hash = s.recv(4096)
-        print(hash)
+        print(f'Received Hash: {hash.decode()}')
 
         break
     s.close()
