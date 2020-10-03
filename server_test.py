@@ -20,12 +20,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             data = conn.recv(4096)
             print(data)
             while l:
-                s.send(l)
+                conn.send(l)
                 i += 1
                 print(i)
                 l = video1.read(4096)
             break
-        conn.close()
-    s.close()
+#        conn.close()
+ #   s.close()
             # if not data: break
             # conn.sendall(data)
