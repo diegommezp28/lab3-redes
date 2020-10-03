@@ -125,6 +125,11 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
+
+#Client videos folder
+save_content/*
+!save_content/.gitkeep 
+
 # Pyre type checker
 .pyre/
 
