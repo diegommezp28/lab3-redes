@@ -1,9 +1,10 @@
 import socket
 import hashlib
 
-HOST = ''                 # Symbolic name meaning all available interfaces
+HOST = 'localhost'                 # Symbolic name meaning all available interfaces
 PORT = 50007  # Arbitrary non-privileged port
 video1 = open("./video1.mkv", "rb")
+
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.bind((HOST, PORT))
@@ -16,16 +17,15 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         conn.send(b'OK')
         while True:
             data = conn.recv(4096)
-            print(data)
             if data==b'Listo para recibir':
                 hashing = hashlib.new('sha256')
-                
                 l = video1.read(4096)
                 print(l)
                 while len(l)>0:
                     conn.send(l)
                     hashing.update(l) 
                     i += 1
+                    print(i)
                     l = video1.read(4096)                
                 
                 

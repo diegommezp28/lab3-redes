@@ -5,7 +5,7 @@ import hashlib
 HOST = 'localhost'    # The remote host
 PORT = 50007  # The same port as used by the server
 
-video1 = open("./save_content/video1.mkv", "wb")
+
 
 
 
@@ -17,22 +17,25 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.sendall(b'Listo para recibir')
 
     i = 0
-    while True:
-        
-        l = s.recv(4096)
-        i+=1
-        print(l)
-        while l:
-            video1.write(l)
+    recibido=True
+    while recibido:
+        with open('./save_content/video1.mkv', 'wb') as video1:
             l = s.recv(4096)
-            i += 1
-            print(i)
+            i+=1
+            print(l)
+            while l:
+                video1.write(l)
             
-            if l == b'hash':
-                break
+                l = s.recv(4096)
+            
+                i += 1
+            
+                print(i)
+                if l == b'hash':
+                    break
 
                       
-        video1.close()    
+         
         hash = s.recv(4096)
 
         hasher = hashlib.new('sha256')
@@ -43,6 +46,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 buffer = video.read(4096)
         hashC=hasher.hexdigest()
         print(f'Received Hash: {hash.decode()} and Calculated Hash: {hashC}')
+        if hashC==hash.decode():
+            s.sendall(b'Recibido correctamente')
+            recibido=False
+        else:
+            s.sendall(b'Recibido incorrectamente')
+
 
 
         break
