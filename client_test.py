@@ -57,7 +57,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         break
     
     s.close()
-
+#
 # with open("./save_content/video1.mkv", "rb") as video:
 #     hashing = sha256()
 #
