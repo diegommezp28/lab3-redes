@@ -2,7 +2,7 @@
 import socket
 import hashlib
 
-HOST = 'localhost'    # The remote host
+HOST = '192.168.1.133'    # The remote host
 PORT = 50007  # The same port as used by the server
 
 
