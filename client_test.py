@@ -29,9 +29,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 l = s.recv(4096)
             
                 i += 1
-            
-                print(i)
+                print('-----')
+                print(l)
                 if l == b'hash':
+                    print('Hash flag')
                     break
 
                       
@@ -48,9 +49,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         print(f'Received Hash: {hash.decode()} and Calculated Hash: {hashC}')
         if hashC==hash.decode():
             s.sendall(b'Recibido correctamente')
+            print('Recibido Correctamente')
             recibido=False
         else:
             s.sendall(b'Recibido incorrectamente')
+            print('Recibido incorrectamente')
 
 
 

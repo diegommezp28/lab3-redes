@@ -28,7 +28,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     print(i)
                     l = video1.read(4096)                
                 
-                
+                conn.settimeout(0.03)
                 conn.send(b'hash')
                 hash = hashing.hexdigest()
                 print(f'Sent Hash: {hash}')                
