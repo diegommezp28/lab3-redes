@@ -1,8 +1,10 @@
 from threading import Thread
 from socket import socket
+from datetime import datetime
 import hashlib
 import time
-import server_log
+
+from server_log import log
 from server_view import preguntar
 
 HOST = 'localhost'  # IP de enlace
@@ -27,12 +29,14 @@ class Client(Thread):
             print('Esperando...')
             while(faltan != 0):
                 continue
+            now = datetime.now()
             print('Enviando nombre')
             self.conn.sendall(bytes(self.file_to_send, encoding='utf-8'))
             time.sleep(0.1)
             self.conn.sendall(b'Emepezando Trasnferencia')
             time.sleep(0.1)
             print('Emepezando Trasnferencia')
+            start_time = time.time()
             with open('./'+self.file_to_send, 'rb') as file1:
                 hashing = hashlib.new('sha256')
                 l = file1.read(4096)
@@ -48,11 +52,23 @@ class Client(Thread):
             print(f'Hash enviado: {hash}')
             time.sleep(0.03)
             self.conn.send(str.encode(hash))
+            transfer_time = time.time()
+            rec = self.conn.recv(4096)
+            # if rec == b'Cantidad Paquetes':
+            #    print('Cantidad de paquetes bien recibida')
+            rec = self.conn.recv(4096)
+            recibidos = repr(rec).replace("b'", '').replace("'", "")
+            #print('Cantidad de paquetes recibidos:', recibidos)
             rec = self.conn.recv(4096)
             if rec == b'Recibido correctamente':
                 print('Recibido correctamente')
+                exitosa = True
             else:
                 print('Recibido incorrectamente')
+                exitosa = False
+            logFile = log(self.addr, now, exitosa, str(transfer_time-start_time),
+                          self.file_to_send, str(i+1), recibidos, str(10), str(10))
+            print("Registro en el log en el archivo " + logFile)
 
 
 def main():

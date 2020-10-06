@@ -97,8 +97,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             f.close()
             print("Registro en el log en el archivo " + filename)
             conn.close()
-                time.sleep(0.1)
-                time.sleep(0.03)                
+
     s.close()
     # if not data: break
     # conn.sendall(data)
