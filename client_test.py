@@ -19,7 +19,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         with open('./save_content/video1.mkv', 'wb') as video1:
             l = s.recv(4096)
             i += 1
-            print(l)
+            # print(l)
             while l:
                 video1.write(l)
 
@@ -43,12 +43,13 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         print(f'Received Hash: {hash.decode()} and Calculated Hash: {hashC}')
         if hashC == hash.decode():
             s.sendall(b'Recibido correctamente')
+            print('Recibido correctamente')
             recibido = False
         else:
             s.sendall(b'Recibido incorrectamente')
-
-        break
-
+            print('Recibido incorrectamente')
+        s.sendall(b'Paquetes recibidos')
+        s.sendall(bytes(str(i), encoding='utf-8'))
     s.close()
 
 # with open("./save_content/video1.mkv", "rb") as video:

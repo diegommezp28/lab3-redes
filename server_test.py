@@ -34,6 +34,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     exitosa = True
     s.setblocking(0)
 
+    pRecibidos = "NaN"
+
     print(filename)
     i = 0
     with conn:
@@ -61,13 +63,19 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             ready = select.select([conn], [], [], 10)
             while exitosa:
                 elapsed_time = time.time() - start_time
-                print(elapsed_time)
+                # print(elapsed_time)
                 if ready[0]:
                     data = conn.recv(4096)
                     if data == b'Recibido correctamente':
-                        break
+                        print('Recibido correctamente')
                     elif data == b'Recibido incorrectamente':
+                        print('Recibido incorrectamente')
                         exitosa = False
+                    print("llega")
+                    data = conn.recv(4096)
+                    if data == b'Paquetes recibidos':
+                        print("llega")
+                        pRecibidos = str(int(conn.recv(4096), 2))
                 if(elapsed_time > 10):
                     print("Tiempo de espera agotado")
                     exitosa = False
@@ -80,8 +88,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             f.write("Exitosa: " + string_estado + "\n")
             tiempo_tot = start_time - transfer_time
             f.write("Tiempo [s]: " + str(tiempo_tot) + "\n")
-            f.write("Cantidad de paquetes enviados: X" + "\n")
-            f.write("Cantidad de paquetes recibidos: X" + "\n")
+            f.write("Cantidad de paquetes enviados: " + str(i) + "\n")
+            f.write("Cantidad de paquetes recibidos: " + pRecibidos + "\n")
             f.write("Cantidad de paquetes transmitidos: X" + "\n")
             f.write("Bytes enviados: X" + "\n")
             f.write("Bytes recibidos: X" + "\n")
