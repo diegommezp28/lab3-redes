@@ -46,12 +46,12 @@ class Client(Thread):
                     recibido=True
 
                 break
-        
+        self.conn.close()
 
 
 def main():
     s = socket()
-    
+
     # Escuchar peticiones en el puerto 6030.
     s.bind((HOST, PORT))
     s.listen(0)
