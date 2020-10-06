@@ -37,10 +37,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     if l == b'hash':
                         print('Hash flag')
                         break
+            print('Paquetes recibidos: ' + str(i-1))
             hash = s.recv(4096)
             s.sendall(b'Cantidad Paquetes')
             time.sleep(0.1)
-            s.sendall(bytes(str(i), encoding='utf-8'))
+            s.sendall(bytes(str(i-1), encoding='utf-8'))
             time.sleep(0.1)
             hasher = hashlib.new('sha256')
             with open('./save_content/'+file_sended, 'rb') as archivo:

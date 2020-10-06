@@ -14,12 +14,12 @@ def format_filename(addr, now):
     return filename
 
 
-def log(addr, now, exitosa, tiempo_tot, file_to_send, enviados, recibidos, benviados, brecibidos):
+def log(addr, now, exitosa, tiempo_tot, file_to_send, file_size, enviados, recibidos, benviados, brecibidos):
     filename = format_filename(addr, now)
     f = open("log/" + filename, "x")
     dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
     f.write("Fecha y hora de inicio: " + dt_string + "\n")
-    f.write("Archivo enviado: " + file_to_send + "\n")
+    f.write("Archivo enviado: " + file_to_send + " - " + file_size + "\n")
     f.write("Cliente: " + str(addr) + "\n")
     string_estado = "Si" if exitosa else "No"
     f.write("Exitosa: " + string_estado + "\n")
@@ -27,6 +27,6 @@ def log(addr, now, exitosa, tiempo_tot, file_to_send, enviados, recibidos, benvi
     f.write("Cantidad de paquetes enviados: " + enviados + "\n")
     f.write("Cantidad de paquetes recibidos: " + recibidos + "\n")
     f.write("Bytes enviados: " + benviados + "\n")
-    f.write("Bytes recibidos: X" + brecibidos + "\n")
+    f.write("Bytes recibidos: " + brecibidos + "\n")
     f.close()
     return filename

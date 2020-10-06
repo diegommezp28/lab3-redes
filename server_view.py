@@ -1,6 +1,7 @@
 def preguntar():
     num_con = 0
     file_to_send = ""
+    file_size = ""
     print('Bienvenido al servidor TCP')
 
     print('Primero, ingrese el numero de conexiones')
@@ -19,12 +20,15 @@ def preguntar():
             num_file = int(input())
             if num_file == 1:
                 file_to_send = "video1.mkv"
+                file_size = "104.4 MB"
                 continuar = False
             elif num_file == 2:
                 file_to_send = "video2.webm"
+                file_size = "53.8 MB"
                 continuar = False
             elif num_file == 3:
                 file_to_send = "archivo3.pdf"
+                file_size = "296.3 MB"
                 continuar = False
             elif num_file == 0:
                 terminar = True
@@ -38,4 +42,4 @@ def preguntar():
 
     else:
         terminar = True
-    return terminar, num_con, file_to_send
+    return terminar, num_con, file_to_send, file_size

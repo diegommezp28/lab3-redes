@@ -13,12 +13,13 @@ PORT = 50007        # Puerto de conección
 
 class Client(Thread):
 
-    def __init__(self, conn, addr, file_to_send):
+    def __init__(self, conn, addr, file_to_send, file_size):
         # Inicializar clase padre.
         Thread.__init__(self)
         self.conn = conn
         self.addr = addr
         self.file_to_send = file_to_send
+        self.file_size = file_size
 
     def run(self):
         global faltan
@@ -67,7 +68,7 @@ class Client(Thread):
                 print('Recibido incorrectamente')
                 exitosa = False
             logFile = log(self.addr, now, exitosa, str(transfer_time-start_time),
-                          self.file_to_send, str(i+1), recibidos, str(10), str(10))
+                          self.file_to_send, self.file_size, str(i), recibidos, str(10), str(10))
             print("Registro en el log en el archivo " + logFile)
 
 
@@ -77,14 +78,14 @@ def main():
     s.bind((HOST, PORT))
     s.listen(0)
     connected = 0
-    terminar, num_con, file_to_send = preguntar()
+    terminar, num_con, file_to_send, file_size = preguntar()
     global faltan
     if not terminar:
         while True:
             conn, addr = s.accept()
             connected += 1
             faltan = num_con - connected
-            c = Client(conn, addr, file_to_send)
+            c = Client(conn, addr, file_to_send, file_size)
             c.start()
             print("%s:%d se ha conectado." % addr)
             print("Faltan " + str(faltan) + " conexiones")
