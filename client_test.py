@@ -1,6 +1,7 @@
 # Echo client program
 import socket
 import hashlib
+import time
 
 HOST = 'localhost'  # '192.168.1.133'    # The remote host
 PORT = 50007  # The same port as used by the server
@@ -13,9 +14,15 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         recibido = True
         print('Recibí', repr(data))
         s.sendall(b'Listo para recibir')
+        data = s.recv(4096)
+        file_sended = repr(data).replace("b'", '').replace("'", "")
+        print('Nombre archivo', file_sended)
+        data = s.recv(4096)
+        if data == b'Emepezando Trasnferencia':
+            print('Bien')
         paquetes = 0
         if recibido:
-            with open('./save_content/archivo_prueba', 'wb') as archivo:
+            with open('./save_content/'+file_sended, 'wb') as archivo:
                 l = s.recv(4096)
                 i = 1
                 # print(l)
@@ -34,14 +41,16 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             hash = s.recv(4096)
 
             hasher = hashlib.new('sha256')
-            with open('./save_content/archivo_prueba', 'rb') as video:
-                buffer = video.read(4096)
+            with open('./save_content/'+file_sended, 'rb') as archivo:
+                buffer = archivo.read(4096)
                 while len(buffer) > 0:
                     hasher.update(buffer)
-                    buffer = video.read(4096)
+                    buffer = archivo.read(4096)
             hashC = hasher.hexdigest()
             print(
                 f'Received Hash: {hash.decode()} and Calculated Hash: {hashC}')
+            time.sleep(0.1)
+
             if hashC == hash.decode():
                 s.sendall(b'Recibido correctamente')
                 print('Recibido correctamente')

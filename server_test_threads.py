@@ -27,6 +27,11 @@ class Client(Thread):
             print('Esperando...')
             while(faltan != 0):
                 continue
+            print('Enviando nombre')
+            self.conn.sendall(bytes(self.file_to_send, encoding='utf-8'))
+            time.sleep(0.1)
+            self.conn.sendall(b'Emepezando Trasnferencia')
+            time.sleep(0.1)
             print('Emepezando Trasnferencia')
             with open('./'+self.file_to_send, 'rb') as file1:
                 hashing = hashlib.new('sha256')
@@ -34,7 +39,7 @@ class Client(Thread):
                 while len(l) > 0:
                     self.conn.send(l)
                     hashing.update(l)
-                    print(i)
+                    # print(i)
                     i += 1
                     l = file1.read(4096)
             time.sleep(0.1)
