@@ -29,8 +29,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 l = s.recv(4096)
             
                 i += 1
-                print('-----')
-                print(l)
+                # print('-----')
+                # print(l)
+                print(i)
                 if l == b'hash':
                     print('Hash flag')
                     break
