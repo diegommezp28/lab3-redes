@@ -7,29 +7,39 @@ HOST = 'localhost'  # '192.168.1.133'    # The remote host
 PORT = 50007  # The same port as used by the server
 
 
+def bytes_of(s):
+    return len(s.encode('utf-8'))
+
+
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    brecibidos = 0
     s.connect((HOST, PORT))
     data = s.recv(4096)
+    brecibidos += len(data)
     if data == b'OK':
         recibido = True
         print('Recibí', repr(data))
         s.sendall(b'Listo para recibir')
         data = s.recv(4096)
+        brecibidos += len(data)
         file_sended = repr(data).replace("b'", '').replace("'", "")
         print('Nombre archivo', file_sended)
         data = s.recv(4096)
+        brecibidos += len(data)
         if data == b'Emepezando Transferencia':
             print('Bien')
         paquetes = 0
         if recibido:
             with open('./save_content/'+file_sended, 'wb') as archivo:
                 l = s.recv(4096)
+                brecibidos += len(l)
                 i = 1
                 # print(l)
                 while l:
                     archivo.write(l)
 
                     l = s.recv(4096)
+                    brecibidos += len(l)
 
                     i += 1
 
@@ -37,11 +47,17 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     if l == b'hash':
                         print('Hash flag')
                         break
-            print('Paquetes recibidos: ' + str(i-1))
             hash = s.recv(4096)
+            brecibidos += len(hash)
+            print('Paquetes recibidos: ' + str(i-1))
             s.sendall(b'Cantidad Paquetes')
             time.sleep(0.1)
             s.sendall(bytes(str(i-1), encoding='utf-8'))
+            time.sleep(0.1)
+            print('Bytes recibidos:' + str(brecibidos))
+            s.sendall(b'Cantidad bytes')
+            time.sleep(0.1)
+            s.sendall(bytes(str(brecibidos), encoding='utf-8'))
             time.sleep(0.1)
             hasher = hashlib.new('sha256')
             with open('./save_content/'+file_sended, 'rb') as archivo:

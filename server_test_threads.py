@@ -28,7 +28,7 @@ class Client(Thread):
     def run(self):
         global faltan
         i = 0
-        benviados = int(self.file_size)
+        benviados = 0  # float(self.file_size)*1000000
         self.conn.send(b'OK')
         benviados += bytes_of('OK')
         data = self.conn.recv(4096)
@@ -51,6 +51,7 @@ class Client(Thread):
                 l = file1.read(4096)
                 while len(l) > 0:
                     self.conn.send(l)
+                    benviados += len(l)
                     hashing.update(l)
                     # print(i)
                     i += 1
@@ -62,14 +63,19 @@ class Client(Thread):
             print(f'Hash enviado: {hash}')
             time.sleep(0.03)
             self.conn.send(str.encode(hash))
-            benviados += bytes_of(str.encode(hash))
+            benviados += 32  # bytes_of(str.encode(hash))
             transfer_time = time.time()
             rec = self.conn.recv(4096)
             # if rec == b'Cantidad Paquetes':
             #    print('Cantidad de paquetes bien recibida')
             rec = self.conn.recv(4096)
             recibidos = repr(rec).replace("b'", '').replace("'", "")
-            #print('Cantidad de paquetes recibidos:', recibidos)
+            rec = self.conn.recv(4096)
+            # if rec == b'Cantidad bytes':
+            #    print('Cantidad de bytes bien recibida')
+            rec = self.conn.recv(4096)
+            brecibidos = repr(rec).replace("b'", '').replace("'", "")
+            #print('Cantidad de bytes recibidos:', brecibidos)
             rec = self.conn.recv(4096)
             if rec == b'Recibido correctamente':
                 print('Recibido correctamente')
@@ -78,7 +84,7 @@ class Client(Thread):
                 print('Recibido incorrectamente')
                 exitosa = False
             logFile = log(self.addr, now, exitosa, str(transfer_time-start_time),
-                          self.file_to_send, self.file_size, str(i), recibidos, str(benviados), str(10))
+                          self.file_to_send, self.file_size, str(i), recibidos, str(benviados), brecibidos)
             print("Registro en el log en el archivo " + logFile)
 
 

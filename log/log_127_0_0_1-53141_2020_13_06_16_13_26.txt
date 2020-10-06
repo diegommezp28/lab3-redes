@@ -1,9 +1,0 @@
-Fecha y hora de inicio: 06/10/2020 16:13:26
-Archivo enviado: video2.webm
-Cliente: ('127.0.0.1', 53141)
-Exitosa: Si
-Tiempo [s]: 1.3531110286712646
-Cantidad de paquetes enviados: 13138
-Cantidad de paquetes recibidos: 13138
-Bytes enviados: 10
-Bytes recibidos: X10
