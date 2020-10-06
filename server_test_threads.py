@@ -1,8 +1,9 @@
 from threading import Thread
 from socket import socket
 import hashlib
+import time
 
-HOST = 'localhost'                 # Symbolic name meaning all available interfaces
+HOST = ''                 # Symbolic name meaning all available interfaces
 PORT = 50007  # Arbitrary non-privileged port
 
 
@@ -25,20 +26,26 @@ class Client(Thread):
                     hashing = hashlib.new('sha256')                
                     l = video1.read(4096)
                     while len(l)>0:
-                        self.conn.send(l)
+                        self.conn.sendall(l)
                         hashing.update(l) 
                         print(i)
                         i += 1
-                        l = video1.read(4096)                
-                self.conn.send(b'hash')
+                        l = video1.read(4096)
+
+                time.sleep(0.1)
+                self.conn.sendall(b'hash')
                 hash = hashing.hexdigest()
-                print(f'Sent Hash: {hash}')                
-                self.conn.send(str.encode(hash))
+                print(f'Sent Hash: {hash}')
+                time.sleep(0.03)
+                self.conn.sendall(str.encode(hash))
                 rec =self.conn.recv(4096)
+
                 if rec == b'Recibido correctamente' :
                     recibido=False
                 else:
                     recibido=True
+
+                break
         
 
 
