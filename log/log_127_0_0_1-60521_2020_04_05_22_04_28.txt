@@ -1,0 +1,11 @@
+Fecha y hora de inicio: 05/10/2020 22:04:28
+Archivo enviado: video1.mkv
+Cliente: ('127.0.0.1', 60521)
+Exitosa: Falso
+Tiempo [s]: -1.1826450824737549
+Cantidad de paquetes enviados: X
+Cantidad de paquetes recibidos: X
+Cantidad de paquetes transmitidos: X
+Bytes enviados: X
+Bytes recibidos: X
+Bytes transmitidos: X
