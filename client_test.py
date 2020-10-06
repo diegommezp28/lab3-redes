@@ -2,7 +2,7 @@
 import socket
 import hashlib
 
-HOST = 'localhost'    # The remote host
+HOST = '192.168.1.133'    # The remote host
 PORT = 50007  # The same port as used by the server
 
 
@@ -29,6 +29,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
                 # print(i)
                 if l == b'hash':
+                    print('Hash flag')
                     break
 
         hash = s.recv(4096)
@@ -44,14 +45,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         if hashC == hash.decode():
             s.sendall(b'Recibido correctamente')
             print('Recibido correctamente')
-            recibido = False
         else:
             s.sendall(b'Recibido incorrectamente')
-            print('Recibido incorrectamente')
         s.sendall(b'Paquetes recibidos')
-        s.sendall(bytes(str(i), encoding='utf-8'))
     s.close()
-
+#
 # with open("./save_content/video1.mkv", "rb") as video:
 #     hashing = sha256()
 #

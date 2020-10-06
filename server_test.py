@@ -5,7 +5,7 @@ import time
 import string
 import select
 
-HOST = 'localhost'                 # Symbolic name meaning all available interfaces
+HOST = ''                 # Symbolic name meaning all available interfaces
 PORT = 50007  # Arbitrary non-privileged port
 fileToSend = "video1.mkv"
 video1 = open("./"+fileToSend, "rb")
@@ -97,6 +97,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             f.close()
             print("Registro en el log en el archivo " + filename)
             conn.close()
+                time.sleep(0.1)
+                time.sleep(0.03)                
     s.close()
     # if not data: break
     # conn.sendall(data)
