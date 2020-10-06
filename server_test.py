@@ -91,7 +91,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             f.write("Cantidad de paquetes enviados: " + str(i) + "\n")
             f.write("Cantidad de paquetes recibidos: " + pRecibidos + "\n")
             f.write("Cantidad de paquetes transmitidos: X" + "\n")
-            f.write("Bytes enviados: X" + "\n")
+            f.write("Bytes enviados: " + "\n")
             f.write("Bytes recibidos: X" + "\n")
             f.write("Bytes transmitidos: X" + "\n")
             f.close()

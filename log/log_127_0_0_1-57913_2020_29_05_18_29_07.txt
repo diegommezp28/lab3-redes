@@ -1,2 +1,0 @@
-Fecha y hora de incio: 05/10/2020 18:29:07
-Archivo enviado: video1.mkvCliente: ('127.0.0.1', 57913)Exitosa: VerdaderoTiempo [s]: -2.097956895828247Cantidad de paquetes enviados: X
