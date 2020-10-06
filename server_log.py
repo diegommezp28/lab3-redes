@@ -19,7 +19,7 @@ def log(addr, now, exitosa, tiempo_tot, file_to_send, file_size, enviados, recib
     f = open("log/" + filename, "x")
     dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
     f.write("Fecha y hora de inicio: " + dt_string + "\n")
-    f.write("Archivo enviado: " + file_to_send + " - " + file_size + "\n")
+    f.write("Archivo enviado: " + file_to_send + " - " + file_size + "MB \n")
     f.write("Cliente: " + str(addr) + "\n")
     string_estado = "Si" if exitosa else "No"
     f.write("Exitosa: " + string_estado + "\n")

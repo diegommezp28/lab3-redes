@@ -18,7 +18,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         file_sended = repr(data).replace("b'", '').replace("'", "")
         print('Nombre archivo', file_sended)
         data = s.recv(4096)
-        if data == b'Emepezando Trasnferencia':
+        if data == b'Emepezando Transferencia':
             print('Bien')
         paquetes = 0
         if recibido:

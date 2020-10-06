@@ -11,6 +11,10 @@ HOST = 'localhost'  # IP de enlace
 PORT = 50007        # Puerto de conección
 
 
+def bytes_of(s):
+    return len(s.encode('utf-8'))
+
+
 class Client(Thread):
 
     def __init__(self, conn, addr, file_to_send, file_size):
@@ -24,19 +28,23 @@ class Client(Thread):
     def run(self):
         global faltan
         i = 0
+        benviados = int(self.file_size)
         self.conn.send(b'OK')
+        benviados += bytes_of('OK')
         data = self.conn.recv(4096)
         if data == b'Listo para recibir':
             print('Esperando...')
             while(faltan != 0):
                 continue
             now = datetime.now()
-            print('Enviando nombre')
+            print('Enviando nombre archivo')
             self.conn.sendall(bytes(self.file_to_send, encoding='utf-8'))
+            benviados += bytes_of(self.file_to_send)
             time.sleep(0.1)
-            self.conn.sendall(b'Emepezando Trasnferencia')
+            self.conn.sendall(b'Emepezando Transferencia')
+            benviados += bytes_of('Emepezando Transferencia')
             time.sleep(0.1)
-            print('Emepezando Trasnferencia')
+            print('Emepezando Transferencia')
             start_time = time.time()
             with open('./'+self.file_to_send, 'rb') as file1:
                 hashing = hashlib.new('sha256')
@@ -49,10 +57,12 @@ class Client(Thread):
                     l = file1.read(4096)
             time.sleep(0.1)
             self.conn.send(b'hash')
+            benviados += bytes_of('hash')
             hash = hashing.hexdigest()
             print(f'Hash enviado: {hash}')
             time.sleep(0.03)
             self.conn.send(str.encode(hash))
+            benviados += bytes_of(str.encode(hash))
             transfer_time = time.time()
             rec = self.conn.recv(4096)
             # if rec == b'Cantidad Paquetes':
@@ -68,7 +78,7 @@ class Client(Thread):
                 print('Recibido incorrectamente')
                 exitosa = False
             logFile = log(self.addr, now, exitosa, str(transfer_time-start_time),
-                          self.file_to_send, self.file_size, str(i), recibidos, str(10), str(10))
+                          self.file_to_send, self.file_size, str(i), recibidos, str(benviados), str(10))
             print("Registro en el log en el archivo " + logFile)
 
 
