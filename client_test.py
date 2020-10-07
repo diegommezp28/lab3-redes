@@ -68,7 +68,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             hashC = hasher.hexdigest()
             print(
                 f'Hash recibido: {hash.decode()} y Hash Calculado: {hashC}')
-            time.sleep(1)
+            time.sleep(0.1)
 
             if hashC == hash.decode():
                 s.sendall(b'Recibido correctamente')

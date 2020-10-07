@@ -7,7 +7,7 @@ import time
 from server_log import log
 from server_view import preguntar
 
-HOST = ''  # IP de enlace
+HOST = ''  # 'localhost' IP de enlace
 PORT = 50007        # Puerto de conección
 
 
