@@ -7,7 +7,7 @@ import time
 from server_log import log
 from server_view import preguntar
 
-HOST = 'localhost'  # IP de enlace
+HOST = ''  # IP de enlace
 PORT = 50007        # Puerto de conección
 
 
@@ -64,11 +64,11 @@ class Client(Thread):
             time.sleep(0.03)
             self.conn.send(str.encode(hash))
             benviados += 32  # bytes_of(str.encode(hash))
-            transfer_time = time.time()
             rec = self.conn.recv(4096)
             # if rec == b'Cantidad Paquetes':
             #    print('Cantidad de paquetes bien recibida')
             rec = self.conn.recv(4096)
+            transfer_time = time.time()
             recibidos = repr(rec).replace("b'", '').replace("'", "")
             rec = self.conn.recv(4096)
             # if rec == b'Cantidad bytes':

@@ -1,0 +1,9 @@
+Fecha y hora de inicio: 06/10/2020 17:13:17
+Archivo enviado: archivo3.pdf - 296.3MB 
+Cliente: ('127.0.0.1', 53857)
+Exitosa: Si
+Tiempo [s]: 3.206914186477661
+Cantidad de paquetes enviados: 72334
+Cantidad de paquetes recibidos: 72334
+Bytes enviados: 296277953
+Bytes recibidos: 296277985
