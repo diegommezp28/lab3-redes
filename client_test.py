@@ -3,7 +3,7 @@ import socket
 import hashlib
 import time
 
-HOST = '192.168.1.133'  # 'localhost'    # The remote host
+HOST = '192.168.2.133'  # 'localhost'    # The remote host
 PORT = 50007  # The same port as used by the server
 
 
@@ -68,7 +68,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             hashC = hasher.hexdigest()
             print(
                 f'Hash recibido: {hash.decode()} y Hash Calculado: {hashC}')
-            time.sleep(0.1)
+            time.sleep(1)
 
             if hashC == hash.decode():
                 s.sendall(b'Recibido correctamente')

@@ -77,12 +77,13 @@ class Client(Thread):
             brecibidos = repr(rec).replace("b'", '').replace("'", "")
             #print('Cantidad de bytes recibidos:', brecibidos)
             rec = self.conn.recv(4096)
-            if rec == b'Recibido correctamente':
-                print('Recibido correctamente')
-                exitosa = True
-            else:
-                print('Recibido incorrectamente')
-                exitosa = False
+            print(repr(rec))
+            # if rec == b'Recibido correctamente':
+            #    print('Recibido correctamente')
+            #    exitosa = True
+            # else:
+            #    print('Recibido incorrectamente')
+            #    exitosa = False
             logFile = log(self.addr, now, exitosa, str(transfer_time-start_time),
                           self.file_to_send, self.file_size, str(i), recibidos, str(benviados), brecibidos)
             print("Registro en el log en el archivo " + logFile)
