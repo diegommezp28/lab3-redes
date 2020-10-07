@@ -75,7 +75,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 print('Recibido correctamente')
             else:
                 s.sendall(b'Recibido incorrectamente')
-            s.sendall(b'Paquetes recibidos')
     s.close()
 #
 # with open("./save_content/video1.mkv", "rb") as video:
