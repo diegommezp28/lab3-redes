@@ -1,0 +1,9 @@
+Fecha y hora de inicio: 06/10/2020 17:08:51
+Archivo enviado: video1.mkv - 104.4MB 
+Cliente: ('127.0.0.1', 53835)
+Exitosa: Si
+Tiempo [s]: 4.060911178588867
+Cantidad de paquetes enviados: 25501
+Cantidad de paquetes recibidos: 25501
+Bytes enviados: 104448282
+Bytes recibidos: 104448314
