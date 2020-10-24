@@ -60,7 +60,7 @@ def main():
         conn, addr = s.accept()
         c = Client(conn, addr)
         c.start()
-        print("%s:%d se ha conectado." %addr)
+        print("%s:%d se ha conectado." %addr)   
 
 
 if __name__ == "__main__":
