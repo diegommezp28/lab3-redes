@@ -1,7 +1,9 @@
+from threading import Thread
 import socket
 import cv2
 import struct
 import math
+import time
 
 
 class FrameSegment(object):
@@ -38,66 +40,54 @@ class FrameSegment(object):
                 print('\nFirst packet total is', len(msg), 'bytes')
 
 
-multicast_group = ('224.3.29.71', 10000)
+class Server(Thread):
 
-# Create Datagram Socket (UDP)
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    def __init__(self, multicast_group, stream_file_url):
+        Thread.__init__(self)
+        self.group = multicast_group
+        self.url = stream_file_url
 
-# Set a timeout so the socket does not block
-# indefinitely when trying to receive data.
-server_socket.settimeout(0.5)
+    def create_connection(self) -> socket:
+        # Create Datagram Socket (UDP)
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-# Set the time-to-live for messages to 1 so they do not
-# go past the local network segment.
-ttl = struct.pack('b', 1)
-server_socket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, ttl)
+        # Set the time-to-live for messages to 1 so they do not
+        # go past the local network segment.
+        ttl = struct.pack('b', 1)
+        server_socket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, ttl)
 
-host_ip = "localhost"
-# port = 8000
-# socket_address = (host_ip, port)
-# print('Address: ', socket_address)
+        return server_socket
 
-buff = 4096
+    def run(self):
+        server_socket = self.create_connection()
+        while True:
+            fs = FrameSegment(server_socket, self.group)
 
-# Socket Bind
-# server_socket.bind(socket_address)
+            vid = cv2.VideoCapture(self.url)
+            print(f'Frame sizes: ({vid.get(3)} x {vid.get(4)})')  # Prints width x height of the captured frame.
+            cont = 1
 
-while True:
-    # Receive Hello message from client
+            while vid.isOpened():
+                ret, frame = vid.read()
+                fs.udp_frame(frame, cont)
+                cont = 2
+                time.sleep(0.02)
 
-    # Send data to the multicast group
-    print('sending {!r}'.format(b'Hello'))
-    sent = server_socket.sendto(b'Hello', multicast_group)
-    print('waiting to receive')
-
-    while True:
-        try:
-            data, addr = server_socket.recvfrom(4096)
-            print('GOT CONNECTION FROM:', addr, ' It said: ', data)
-        except socket.timeout:
-            print('timed out, no more responses')
             break
-        else:
-            print('received {!r} from {}'.format(data, addr))
-
-    fs = FrameSegment(server_socket, multicast_group)
 
 
-    vid = cv2.VideoCapture('../../TCP/video1.mkv')
-    print(f'Frame sizes: ({vid.get(3)} x {vid.get(4)})')  # Prints width x height of the captured frame.
-    cont = 1
+def main():
+    multicast_group1 = ('224.3.29.71', 10000)
+    multicast_group2 = ('224.3.29.72', 10000)
+    video_path1 = '../../TCP/video1.mkv'
+    video_path2 = '../../TCP/video2.webm'
 
-    while vid.isOpened():
-        ret, frame = vid.read()
-        fs.udp_frame(frame, cont)
-        cont = 2
-        # compressedData = cv2.imencode(ext='.jpeg', img=frame)[1]
-        #
-        # # Prints control info for the first packet sent
-        # a = compressedData.tobytes()
-        # message = struct.pack("Q", len(a)) + a
-        # if cont == 1:
-        #     print('Type: ', type(compressedData), 'Shape: ', compressedData.shape)
-        #     print('First packet is ', len(a), ' bytes')
-        #     cont += 1
-    break
+    server1 = Server(multicast_group1, video_path1)
+    server1.start()
+
+    server2 = Server(multicast_group2, video_path2)
+    server2.start()
+
+
+if __name__ == '__main__':
+    main()

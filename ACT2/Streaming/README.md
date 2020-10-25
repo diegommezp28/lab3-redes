@@ -14,25 +14,20 @@ A continuación, una breve explicación de esta parte del proyecto y pasos a seg
 * Este proyecto usa _OpenCV_ como librería para la lectura y visualización de los videos,
 por ende, es necesario que instale los paquetes especificados en el archivo 
 _requirements.txt_ usando `pip`. Para esto ubíquese en esta carpeta y ejecute: 
-`pip install -r requirements.txt`.
+`pip install -r requirements.txt`. Si el paquete de OpenCV por defecto molesta instalando, 
+puede instalar _opencv-contrib-python_ como reemplazo, esto ejecutando: 
+`pip install opencv-contrib-python`. 
 
-* Antes de correr cliente y servidor recuerde modificar la ip y puerto asignado
-al servidor en caso de que no estén corriendo ambos en la misma máquina. También 
-recuerde modificar el puerto en caso de que el puerto 10000 (usado por defecto) 
+* Recuerde modificar el puerto tanto en cliente como
+ en servidor en caso de que el puerto 10000 (usado por defecto) 
 esté ocupado.
 
-* Primero se corren los clientes y luego el servidor en este caso. Sino, 
-el servidor queda esperando confirmación de los clientes y se activa el timeout.
-Para modificar este comportamiento habría que quitar el timeout en servidor y
-modificar el protocolo para que el cliente no espere el mensaje de servidor ni mande 
-el ack, si no que empiece enseguida recibir paquetes.
+* Primero se corre el servidor. Luego, al correr un cliente se le mostrará
+la opción para escoger a cuál de los dos canales de streaming conectarse. 
+En cada uno hay un video diferente. Luego de conectado, el cliente puede
+salirse de la transmisión presionando la tecla `q` , al hacer esto se le preguntará
+nuevamente un canal para escoger, si presiona `q` de nuevo, terminará el programa.
 
-* Por defecto el Streaming de video es de la cámara de la máquina. Si Python no
-tiene permisos para usarla, el PC no cuenta con una o tiene un indice distinto
-en el OS que el que se le asigna por defecto (0), es posible que salga error. 
-Si quiere ver un video en particular en vez de la cámara, vaya dentro de _server.py_
-y cambie el 0 en `cv2.VideoCapture(0)` a un _string_ con la ruta al archivo de 
-video. Por ejemplo, `cv2.VideoCapture('./assets/video.mpeg')`
 
 ### Importante
 Que el programa corra bien en Multicast depende enteramente de que la interfaz de red usada soporte
@@ -62,4 +57,4 @@ grupo de la interfaz de red.
 * https://stackoverflow.com/questions/603852/how-do-you-udp-multicast-in-python
 * https://unix.stackexchange.com/questions/25872/how-can-i-know-if-ip-multicast-is-enabled
 * https://wiki.python.org/moin/UdpCommunication
-* https://stackoverflow.com/questions/10692956/what-does-it-mean-to-bind-a-multicast-udp-socket
+* https://stackoverflow.com/questions/10692956/what-does-it-mean-to-bind-a-multicast-udp-socket~~~~
