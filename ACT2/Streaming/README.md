@@ -33,7 +33,7 @@ nuevamente un canal para escoger, si presiona `q` de nuevo, terminará el progra
 Que el programa corra bien en Multicast depende enteramente de que la interfaz de red usada soporte
 Multicasting en primer lugar. En linux (y probablemente en Mac También), podemos checkear que está bien si,
 luego de correr el cliente, se ejecuta `netstat -g` para ver los grupos de Multicast del sistema operativo.
-Si todo anda bien, debe haber un grupo con la dirección 224.3.29.71, la cual se define en código. Importante
+Si todo anda bien,al escoger el canal 1, debe haber un grupo con la dirección 224.3.29.71, la cual se define en código. Importante
 que este corriendo el cliente al momento de ejecutar `netstat`, porque al acabar el programa el OS elimina el
 grupo de la interfaz de red.
 
