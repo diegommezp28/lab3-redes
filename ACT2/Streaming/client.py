@@ -8,6 +8,7 @@ MAX_DGRAM = 2 ** 16
 
 multicast_group1 = ('224.3.29.71', 10000)
 multicast_group2 = ('224.3.29.72', 10000)
+multicast_group3 = ('224.3.29.73', 10000)
 
 
 def stream_video(channel):
@@ -53,6 +54,7 @@ def main():
         print('Los siguiente son los canales disponibles \n')
         print('1.', multicast_group1)
         print('2.', multicast_group2)
+        print('3.', multicast_group3)
         print("\n Digite el número correspondiente al canal o presione 'q' para salir del Streaming ")
 
         option = str(input()).replace(' ', '')
@@ -61,6 +63,8 @@ def main():
             stream_video(multicast_group1)
         elif option == '2':
             stream_video(multicast_group2)
+        elif option == '3':
+            stream_video(multicast_group3)
         elif option == 'q':
             break
         else:
@@ -69,4 +73,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

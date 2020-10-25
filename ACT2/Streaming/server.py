@@ -20,7 +20,10 @@ class FrameSegment(object):
         self.addr = address
 
     def udp_frame(self, img, cont):
+        # try:
         img = cv2.resize(img, (600, 400))
+        # except Exception as e:
+        #    print(str(e))
         compressed_data = cv2.imencode(ext='.jpeg', img=img)[1]
         data = compressed_data.tobytes()
         size = len(data)
@@ -29,13 +32,15 @@ class FrameSegment(object):
 
         while num_of_segments:
             end_position = min(size, start_position + self.MAX_IMAGE_DGRAM)
-            msg = struct.pack("B", num_of_segments) + data[start_position:end_position]
+            msg = struct.pack("B", num_of_segments) + \
+                data[start_position:end_position]
             self.s.sendto(msg, self.addr)
             start_position = end_position
             num_of_segments -= 1
 
             if cont == 1:
-                print('Type: ', type(compressed_data), 'Shape: ', compressed_data.shape)
+                print('Type: ', type(compressed_data),
+                      'Shape: ', compressed_data.shape)
                 print('First packet raw is ', len(data), ' bytes')
                 print('\nFirst packet total is', len(msg), 'bytes')
 
@@ -54,7 +59,8 @@ class Server(Thread):
         # Set the time-to-live for messages to 1 so they do not
         # go past the local network segment.
         ttl = struct.pack('b', 1)
-        server_socket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, ttl)
+        server_socket.setsockopt(
+            socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, ttl)
 
         return server_socket
 
@@ -64,7 +70,8 @@ class Server(Thread):
             fs = FrameSegment(server_socket, self.group)
 
             vid = cv2.VideoCapture(self.url)
-            print(f'Frame sizes: ({vid.get(3)} x {vid.get(4)})')  # Prints width x height of the captured frame.
+            # Prints width x height of the captured frame.
+            print(f'Frame sizes: ({vid.get(3)} x {vid.get(4)})')
             cont = 1
 
             while vid.isOpened():
@@ -79,14 +86,19 @@ class Server(Thread):
 def main():
     multicast_group1 = ('224.3.29.71', 10000)
     multicast_group2 = ('224.3.29.72', 10000)
+    multicast_group3 = ('224.3.29.73', 10000)
     video_path1 = '../../TCP/video1.mkv'
     video_path2 = '../../TCP/video2.webm'
+    video_path3 = '../../TCP/v1.mp4'
 
     server1 = Server(multicast_group1, video_path1)
     server1.start()
 
     server2 = Server(multicast_group2, video_path2)
     server2.start()
+
+    server3 = Server(multicast_group3, video_path3)
+    server3.start()
 
 
 if __name__ == '__main__':
