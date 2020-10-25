@@ -18,7 +18,8 @@ class FrameSegment(object):
         self.addr = address
 
     def udp_frame(self, img):
-        compressed_data = cv2.imencode(ext='.jpeg', img=frame)[1]
+        img = cv2.resize(img, (600, 400))
+        compressed_data = cv2.imencode(ext='.jpeg', img=img)[1]
         data = compressed_data.tobytes()
         size = len(data)
         num_of_segments = math.ceil(size / self.MAX_IMAGE_DGRAM)
@@ -53,12 +54,12 @@ while True:
     fs = FrameSegment(server_socket, addr)
 
     if data:
-        vid = cv2.VideoCapture(0)
+        vid = cv2.VideoCapture('../../TCP/video1.mkv')
         print(f'Frame sizes: ({vid.get(3)} x {vid.get(4)})')  # Prints width x height of the captured frame.
         cont = 1
 
         while vid.isOpened():
-            _, frame = vid.read()
+            ret, frame = vid.read()
             fs.udp_frame(frame)
             compressedData = cv2.imencode(ext='.jpeg', img=frame)[1]
 
