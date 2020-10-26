@@ -16,7 +16,7 @@ def preguntar():
                 'Escoja el archivo a transmitir (escriba el número correspondiente u oprima 0 para salir):')
             print('1. video1.mkv [104.4 MB]')
             print('2. video2.webm [53.8 MB]')
-            print('3. archivo3.pdf [296.3 MB]')
+            print('3. v1.mp4 [628 KB]')
             num_file = int(input())
             if num_file == 1:
                 file_to_send = "video1.mkv"
@@ -27,8 +27,8 @@ def preguntar():
                 file_size = "53.8"
                 continuar = False
             elif num_file == 3:
-                file_to_send = "archivo3.pdf"
-                file_size = "296.3"
+                file_to_send = "v1.mp4"
+                file_size = "0.628"
                 continuar = False
             elif num_file == 0:
                 terminar = True

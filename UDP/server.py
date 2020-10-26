@@ -126,10 +126,10 @@ def main():
     connected = 0
     terminar, num_con, file_to_send, file_size = preguntar()
     global faltan
-    faltan = 0
+    faltan = num_con
     direcciones = {}
     if not terminar:
-        while True:
+        while faltan != 0:
             print('Esperando...')
             data, address = s.recvfrom(mss)
             dir_pu = address[0]+str(address[1])

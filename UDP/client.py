@@ -16,7 +16,7 @@ from packet import *
 HOST = 'localhost'  # '192.168.2.133'    # The remote host
 PORT = 7735  # The same port as used by the server
 folder = './save_content/'
-file_sended = 'video1.mkv'
+file_sended = 'v1.mp4'
 bufsize = 4096
 
 
