@@ -85,8 +85,8 @@ class Server(Thread):
 
 def main():
     multicast_group1 = ('224.3.29.71', 10000)
-    multicast_group2 = ('224.3.29.72', 10000)
-    multicast_group3 = ('224.3.29.73', 10000)
+    multicast_group2 = ('224.3.29.72', 10001)
+    multicast_group3 = ('224.3.29.73', 10002)
     video_path1 = '../../TCP/video1.mkv'
     video_path2 = '../../TCP/video2.webm'
     video_path3 = '../../TCP/v1.mp4'

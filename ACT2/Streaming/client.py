@@ -7,8 +7,8 @@ import struct
 MAX_DGRAM = 2 ** 16
 
 multicast_group1 = ('224.3.29.71', 10000)
-multicast_group2 = ('224.3.29.72', 10000)
-multicast_group3 = ('224.3.29.73', 10000)
+multicast_group2 = ('224.3.29.72', 10001)
+multicast_group3 = ('224.3.29.73', 10002)
 
 
 def stream_video(channel):
