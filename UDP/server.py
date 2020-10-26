@@ -20,8 +20,8 @@ from server_view import preguntar
 
 HOST = ''  # 'localhost' IP de enlace
 PORT = 7735        # Puerto de conección
-windowSize = 10
-mss = 500
+windowSize = 1
+mss = 3900
 
 
 def bytes_of(s):
@@ -79,7 +79,8 @@ class Client(Thread):
         self.total_unacked = 0
         while self.unacked < len(sendingData):
             if self.total_unacked < self.window_end and (self.total_unacked + self.unacked) < len(sendingData):
-                print('Caso1')
+                # Cuando estoy adentro de la ventana, mando el ultimo que no he enviado
+                # print('Caso1')
                 for i in sendingData:
                     sq = int(i.sequenceNumber, 2)
                     if sq == self.total_unacked + self.unacked:
@@ -88,7 +89,8 @@ class Client(Thread):
                 self.total_unacked += 1
                 continue
             else:
-                print('Caso2')
+                # print('Caso2')
+                # Cuando me pongo a revisar si si están recibiendo mis mensajes
                 ready = select.select([self.sock], [], [], self.timeout)
                 if ready[0]:
                     ackData, address = self.sock.recvfrom(4096)
@@ -102,6 +104,9 @@ class Client(Thread):
                         else:
                             self.total_unacked = 0
                             continue
+                    else:
+                        self.total_unacked = 0
+                        continue
                 else:
                     print('Timeout, sequence number = ', self.unacked)
                     self.total_unacked = 0
