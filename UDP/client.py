@@ -1,14 +1,23 @@
 # Echo client program
-import socket
 import hashlib
+import sys
 import time
+import datetime
+import socket
+import pickle
+import select
+import signal
+import os
 import timeit
+import threading
+
+from packet import *
 
 HOST = 'localhost'  # '192.168.2.133'    # The remote host
 PORT = 7735  # The same port as used by the server
 folder = './save_content/'
-p = 0.05
 file_sended = 'video1.mkv'
+bufsize = 4096
 
 
 def bytes_of(s):
@@ -19,51 +28,29 @@ class Client:
     def __init__(self):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.connect((HOST, PORT))
-        self.sock.setblocking(0)
-        self.p = p
+        # self.sock.setblocking(0)
         self.expected_seq = 0
         self.ack_seq = 0
         self.timeout = 0.1
         self.packet_loss = False
 
-    # Carry bit used in one's combliment
-    def carry_around_add(self, num_1, num_2):
-        c = num_1 + num_2
-        return (c & 0xffff) + (c >> 16)
-
-    # Calculate the checksum of the data only. Return True or False
-    def checksum(self, msg):
-        """Compute and return a checksum of the given data"""
-        msg = msg.decode('utf-8')
-        if len(msg) % 2:
-            msg += "0"
-        s = 0
-        for i in range(0, len(msg), 2):
-            w = ord(msg[i]) + (ord(msg[i + 1]) << 8)
-            s = self.carry_around_add(s, w)
-        return ~s & 0xffff
-
     def receive(self):
-        print("Empieza")
+        print("Soy un cliente")
         global data
+        self.sock.send(b'Hola servidor')
+        print('Esperando...')
+        data, address = self.sock.recvfrom(bufsize)
         file = open('./save_content/'+file_sended, 'wb')
         i = 0
+        while(data != b'Empezando a transmitir'):
+            continue
+        print('Empezando recepción')
         try:
             while True:
-                print(i)
-                i += 1
                 try:
-                    data, address = self.sock.recvfrom(4096)
+                    data, address = self.sock.recvfrom(bufsize)
                     data = pickle.loads(data)
-                    prob = random.random()
                     if self.expected_seq != int(data.sequenceNumber, 2):
-                        continue
-                    elif data.checksum != self.checksum(data.packet):
-                        continue
-
-                    elif prob <= self.p:
-                        print('Packet Loss, Sequence Number = ',
-                              int(data.sequenceNumber, 2))
                         continue
 
                 except socket.error:
@@ -74,14 +61,14 @@ class Client:
 
                 file.write(data.packet)
                 sendACK = Acknowledgment(data.sequenceNumber)
-                self.sock.sendto(pickle.dumps(sendACK), address)
+                self.sock.send(pickle.dumps(sendACK))
                 if data.eof == 1:
                     print('File Received.')
                     sys.exit(0)
                 self.expected_seq += 1
-                print(i)
             file.close()
-        except:
+        except Exception as e:
+            print('Exception', e)
             pass
 
 
