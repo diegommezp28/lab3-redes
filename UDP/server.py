@@ -79,6 +79,7 @@ class Client(Thread):
         self.total_unacked = 0
         while self.unacked < len(sendingData):
             if self.total_unacked < self.window_end and (self.total_unacked + self.unacked) < len(sendingData):
+                print('Caso1')
                 for i in sendingData:
                     sq = int(i.sequenceNumber, 2)
                     if sq == self.total_unacked + self.unacked:
@@ -87,18 +88,20 @@ class Client(Thread):
                 self.total_unacked += 1
                 continue
             else:
+                print('Caso2')
                 ready = select.select([self.sock], [], [], self.timeout)
                 if ready[0]:
                     ackData, address = self.sock.recvfrom(4096)
-                    ackData = pickle.loads(ackData)
-                    if ackData.ackField != 0b1010101010101010:
-                        continue
-                    if int(ackData.sequenceNumber, 2) == self.unacked:
-                        self.unacked += 1
-                        self.total_unacked -= 1
-                    else:
-                        self.total_unacked = 0
-                        continue
+                    if(address == self.address):
+                        ackData = pickle.loads(ackData)
+                        if ackData.ackField != 0b1010101010101010:
+                            continue
+                        if int(ackData.sequenceNumber, 2) == self.unacked:
+                            self.unacked += 1
+                            self.total_unacked -= 1
+                        else:
+                            self.total_unacked = 0
+                            continue
                 else:
                     print('Timeout, sequence number = ', self.unacked)
                     self.total_unacked = 0
@@ -111,6 +114,9 @@ class Client(Thread):
         global faltan
         i = 0
         benviados = 0
+        # Envía el nombre del archivo
+        self.sock.sendto(
+            bytes(self.file_to_send, encoding='utf-8'), self.address)
         while(faltan != 0):
             continue
         self.sock.sendto(b'Empezando a transmitir', self.address)

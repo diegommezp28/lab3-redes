@@ -16,7 +16,6 @@ from packet import *
 HOST = 'localhost'  # '192.168.2.133'    # The remote host
 PORT = 7735  # The same port as used by the server
 folder = './save_content/'
-file_sended = 'v1.mp4'
 bufsize = 4096
 
 
@@ -38,7 +37,11 @@ class Client:
         print("Soy un cliente")
         global data
         self.sock.send(b'Hola servidor')
-        print('Esperando...')
+        # Recibe el nombre del archivo
+        data, address = self.sock.recvfrom(bufsize)
+        file_sended = repr(data).replace("b'", '').replace("'", "")
+        print('Esperando archivo ', file_sended)
+
         data, address = self.sock.recvfrom(bufsize)
         file = open('./save_content/'+file_sended, 'wb')
         i = 0
