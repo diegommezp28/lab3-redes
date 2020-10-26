@@ -55,14 +55,14 @@ class Client:
 
     # RDT Send method to send the file to the server
     def rdt_send(self):
-        print('Empieza')
+        # print('Empieza')
         sendingData = self.divideFile(
             self.mss, self.fileName, self.sequenceNumber)
-        print('Divide')
+        # print('Divide')
         self.unacked = 0
         self.total_unacked = 0
         while self.unacked < len(sendingData):
-            print('entra')
+            # print('entra')
             if self.total_unacked < self.window_end and (self.total_unacked + self.unacked) < len(sendingData):
 
                 for i in sendingData:
@@ -98,14 +98,14 @@ class Client:
     def divideFile(self, mss, filename, sequenceNumber):
         # k = list()
         sequenceNumber = format(sequenceNumber, '032b')
-        print('Abrira ', filename)
+        #print('Abrira ', filename)
         with open(filename, "rb") as binary_file:
             # Read the whole file at once
             data = binary_file.read()
             # Seek position and read N bytes
             i = 0
             length = sys.getsizeof(data)
-            print(length)
+            # print(length)
             while i <= length:
                 binary_file.seek(i)  # Go to beginning
                 couple_bytes = binary_file.read(mss)
@@ -120,7 +120,7 @@ class Client:
                 i += mss
                 temp = int(sequenceNumber, 2) + 1
                 sequenceNumber = format(temp, '032b')
-            print('termina')
+            # print('termina')
         return self.packetList
 
 

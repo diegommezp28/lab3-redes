@@ -53,17 +53,17 @@ class Server:
         file = open('./save_content/prueba.mp4', 'wb')
         try:
             while True:
-                print('entra')
+                # print('entra')
                 try:
-                    print('try')
+                    # print('try')
                     data, address = self.sock.recvfrom(4096)
                     data = pickle.loads(data)
                     prob = random.random()
                     if self.expected_seq != int(data.sequenceNumber, 2):
-                        print('1')
+                        # print('1')
                         continue
                     elif data.checksum != self.checksum(data.packet):
-                        print('2')
+                        # print('2')
                         continue
 
                     elif prob <= self.p:
@@ -72,7 +72,7 @@ class Server:
                         continue
 
                 except socket.error:
-                    print('socker.error')
+                    # print('socker.error')
                     continue
                 except KeyboardInterrupt:
                     self.sock.close()
@@ -82,14 +82,14 @@ class Server:
                 sendACK = Acknowledgment(data.sequenceNumber)
                 self.sock.sendto(pickle.dumps(sendACK), address)
                 if data.eof == 1:
-                    print('File Received.')
+                    #print('File Received.')
                     sys.exit(0)
                 self.expected_seq += 1
             file.close()
-            print('close')
+            # print('close')
         except Exception as e:
-            print('pass')
-            print(e)
+            # print('pass')
+            # print(e)
             pass
 
 
