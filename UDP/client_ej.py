@@ -31,7 +31,7 @@ class Client:
         self.window_end = windowSize
         self.unacked = 0
         self.total_unacked = 0
-        self.timeout = 0.1  # Timeout value for every packet to be sent
+        self.timeout = 10  # Timeout value for every packet to be sent
         self.sequenceNumber = 0  # default sequence Number to divide file
 
     # Carry bit used in one's combliment
@@ -43,23 +43,26 @@ class Client:
     # Calculate the checksum of the data only. Return True or False
     def checksum(self, msg):
         """Compute and return a checksum of the given data"""
-        msg = msg.decode('utf-8', errors='ignore')
-        if len(msg) % 2:
-            msg += "0"
+        # msg = msg.decode('utf-8', errors='ignore')
+        # if len(msg) % 2:
+        #     msg += "0"
 
-        s = 0
-        for i in range(0, len(msg), 2):
-            w = ord(msg[i]) + (ord(msg[i + 1]) << 8)
-            s = self.carry_around_add(s, w)
-        return ~s & 0xffff
+        # s = 0
+        # for i in range(0, len(msg), 2):
+        #     w = ord(msg[i]) + (ord(msg[i + 1]) << 8)
+        #     s = self.carry_around_add(s, w)
+        return True  # ~s & 0xffff
 
     # RDT Send method to send the file to the server
     def rdt_send(self):
+        print('Empieza')
         sendingData = self.divideFile(
             self.mss, self.fileName, self.sequenceNumber)
+        print('Divide')
         self.unacked = 0
         self.total_unacked = 0
         while self.unacked < len(sendingData):
+            print('entra')
             if self.total_unacked < self.window_end and (self.total_unacked + self.unacked) < len(sendingData):
 
                 for i in sendingData:
@@ -93,14 +96,16 @@ class Client:
 
     # Function to divide the file into many chunks of packets based on the MSS value and save into list buffer
     def divideFile(self, mss, filename, sequenceNumber):
-        #k = list()
+        # k = list()
         sequenceNumber = format(sequenceNumber, '032b')
+        print('Abrira ', filename)
         with open(filename, "rb") as binary_file:
             # Read the whole file at once
             data = binary_file.read()
             # Seek position and read N bytes
             i = 0
             length = sys.getsizeof(data)
+            print(length)
             while i <= length:
                 binary_file.seek(i)  # Go to beginning
                 couple_bytes = binary_file.read(mss)
@@ -115,12 +120,12 @@ class Client:
                 i += mss
                 temp = int(sequenceNumber, 2) + 1
                 sequenceNumber = format(temp, '032b')
+            print('termina')
         return self.packetList
 
 
 # Main function which will run the main thread
 def main():
-    print("Empieza")
     # Arguments are passed in order of acceptance in the command line arguments
     socClient = Client(sys.argv[1], int(sys.argv[2]),
                        sys.argv[3], int(sys.argv[4]), int(sys.argv[5]))

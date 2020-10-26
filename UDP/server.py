@@ -3,6 +3,17 @@ import socket
 from datetime import datetime
 import hashlib
 import time
+import sys
+from packet import *
+import sys
+import time
+import pickle
+import select
+import signal
+import os
+import timeit
+import threading
+
 
 from server_log import log
 from server_view import preguntar
@@ -54,6 +65,7 @@ class Client(Thread):
 
     def divideFile(self, mss, filename, sequenceNumber):
         #k = list()
+        print('empieza a dividir ' + filename)
         sequenceNumber = format(sequenceNumber, '032b')
         with open(filename, "rb") as binary_file:
             # Read the whole file at once
@@ -75,14 +87,18 @@ class Client(Thread):
                 i += mss
                 temp = int(sequenceNumber, 2) + 1
                 sequenceNumber = format(temp, '032b')
+            print('termina de dividir ' + filename)
         return self.packetList
 
-    def send():
+    def send(self):
+        print('Empezó a enviar')
         sendingData = self.divideFile(
             self.mss, self.file_to_send, self.sequenceNumber)
+        print('dividido')
         self.unacked = 0
         self.total_unacked = 0
         while self.unacked < len(sendingData):
+            print('entro')
             if self.total_unacked < self.window_end and (self.total_unacked + self.unacked) < len(sendingData):
                 for i in sendingData:
                     sq = int(i.sequenceNumber, 2)
@@ -117,15 +133,15 @@ class Client(Thread):
         global faltan
         i = 0
         benviados = 0  # float(self.file_size)*1000000
-        self.conn.send(b'OK')
-        benviados += bytes_of('OK')
-        data = self.conn.recv(4096)
-        if data == b'Listo para recibir':
-            print('Esperando...')
-            while(faltan != 0):
-                continue
-            print('Empieza a transmitir')
-            send()
+        # self.conn.send(b'OK')
+        #benviados += bytes_of('OK')
+        #data = self.conn.recv(4096)
+        # if data == b'Listo para recibir':
+        # print('Esperando...')
+        # while(faltan != 0):
+        #    continue
+        print('Empieza a transmitir')
+        self.send()
 
 
 def main():
@@ -136,11 +152,11 @@ def main():
     print('Servidor en: ', HOST, PORT)
     connected = 0
     terminar, num_con, file_to_send, file_size = preguntar()
-    print(terminar)
     global faltan
     faltan = 0
-    while not terminar:
+    if not terminar:
         c = Client(s, file_to_send, file_size)
+        c.start()
     #    while True:
     #        conn, addr = s.accept()
     #        connected += 1

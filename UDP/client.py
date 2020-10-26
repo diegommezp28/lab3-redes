@@ -47,8 +47,11 @@ class Client:
         print("Empieza")
         global data
         file = open('./save_content/'+file_sended, 'wb')
+        i = 0
         try:
             while True:
+                print(i)
+                i += 1
                 try:
                     data, address = self.sock.recvfrom(4096)
                     data = pickle.loads(data)
@@ -76,6 +79,7 @@ class Client:
                     print('File Received.')
                     sys.exit(0)
                 self.expected_seq += 1
+                print(i)
             file.close()
         except:
             pass
