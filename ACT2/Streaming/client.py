@@ -40,7 +40,10 @@ def stream_video(channel):
             # decompress de image
             img = cv2.imdecode(compress_img, flags=1)
             # Shows de deccoded frame
-            cv2.imshow('Frame', img)
+            try:
+                cv2.imshow('Frame', img)
+            except Exception as e:
+                pass
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
             data = b''

@@ -20,10 +20,10 @@ class FrameSegment(object):
         self.addr = address
 
     def udp_frame(self, img, cont):
-        # try:
-        img = cv2.resize(img, (600, 400))
-        # except Exception as e:
-        #    print(str(e))
+        try:
+            img = cv2.resize(img, (600, 400))
+        except Exception as e:
+            return ''
         compressed_data = cv2.imencode(ext='.jpeg', img=img)[1]
         data = compressed_data.tobytes()
         size = len(data)
@@ -71,7 +71,7 @@ class Server(Thread):
 
             vid = cv2.VideoCapture(self.url)
             # Prints width x height of the captured frame.
-            print(f'Frame sizes: ({vid.get(3)} x {vid.get(4)})')
+            # print(f'Frame sizes: ({vid.get(3)} x {vid.get(4)})')
             cont = 1
 
             while vid.isOpened():
@@ -80,7 +80,7 @@ class Server(Thread):
                 cont = 2
                 time.sleep(0.02)
 
-            break
+            # break
 
 
 def main():
