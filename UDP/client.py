@@ -53,8 +53,6 @@ class Client:
                 try:
                     data, address = self.sock.recvfrom(bufsize)
                     data = pickle.loads(data)
-                    if self.expected_seq != int(data.sequenceNumber, 2):
-                        continue
 
                 except socket.error:
                     continue
@@ -63,13 +61,9 @@ class Client:
                     sys.exit(0)
 
                 file.write(data.packet)
-                # manda el ack del que recibio
-                sendACK = Acknowledgment(data.sequenceNumber)
-                self.sock.send(pickle.dumps(sendACK))
                 if data.eof == 1:
                     print('File Received.')
                     sys.exit(0)
-                self.expected_seq += 1
             file.close()
         except Exception as e:
             print('Exception', e)
