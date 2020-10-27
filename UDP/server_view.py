@@ -2,7 +2,7 @@ def preguntar():
     num_con = 0
     file_to_send = ""
     file_size = ""
-    print('Bienvenido al servidor TCP')
+    print('Bienvenido al servidor UDP')
 
     print('Primero, ingrese el numero de conexiones')
     print('Recuerde que pueden ser entre 1 y 25, o ingrese 0 para apagar')
