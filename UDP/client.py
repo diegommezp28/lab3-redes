@@ -15,7 +15,7 @@ import errno
 
 from packet import *
 
-HOST = 'localhost'  # '192.168.2.133'    # The remote host
+HOST = '192.168.2.133'  # 'localhost'    # The remote host
 PORT = 7735  # The same port as used by the server
 folder = './save_content/'
 bufsize = 4096
