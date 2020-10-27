@@ -104,7 +104,7 @@ class Client(Thread):
         else:
             print('Recibido incorrectamente')
             exitosa = False
-        # Recibir info de envio
+        # Recibir info de envio, primero paquetes y después bytes
         data, address = self.sock.recvfrom(mss)
         recibidos = repr(data).replace("b'", '').replace("'", "")
         data, address = self.sock.recvfrom(mss)
@@ -137,7 +137,7 @@ def main():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.bind((HOST, PORT))
     # s.setblocking(0)
-    print('Servidor en: ', HOST, PORT)
+    #print('Servidor en: ', HOST, PORT)
     connected = 0
     terminar, num_con, file_to_send, file_size = preguntar()
     global faltan
