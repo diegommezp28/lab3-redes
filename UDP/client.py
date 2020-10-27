@@ -15,7 +15,7 @@ import errno
 
 from packet import *
 
-HOST = '192.168.2.133'  # 'localhost'    # The remote host
+HOST = 'localhost'  # '192.168.2.133'    # The remote host
 PORT = 7735  # The same port as used by the server
 folder = './save_content/'
 bufsize = 4096
@@ -56,7 +56,7 @@ class Client:
         print('Esperando archivo ', file_sended)
 
         data, address = self.sock.recvfrom(bufsize)
-        filepath = './save_content/'+str(newPORT)+'/'
+        filepath = folder+'/vm/'+str(newPORT)+'/'
         if not os.path.exists(os.path.dirname(filepath)):
             try:
                 os.makedirs(os.path.dirname(filepath))
@@ -69,11 +69,17 @@ class Client:
         while(data != b'Empezando a transmitir'):
             continue
         print('Empezando recepción')
+        hash = ''
         try:
             while True:
                 try:
-                    data, address = self.sock.recvfrom(bufsize)
-                    data = pickle.loads(data)
+                    data_raw, address = self.sock.recvfrom(bufsize)
+                    if data_raw == b'HASH':
+                        data_raw, address = self.sock.recvfrom(bufsize)
+                        hash = data_raw
+                        break
+                    else:
+                        data = pickle.loads(data_raw)
 
                 except socket.error:
                     continue
@@ -86,6 +92,24 @@ class Client:
                     print('File Received.')
                     sys.exit(0)
             file.close()
+
+            # Revisar el hash recibido y el enviado
+            hasher = hashlib.new('sha256')
+            with open(filepath+file_sended, 'rb') as archivo:
+                buffer = archivo.read(3900)
+                while len(buffer) > 0:
+                    hasher.update(buffer)
+                    buffer = archivo.read(3900)
+            hashC = hasher.hexdigest()
+            print(
+                f'Hash recibido: {hash.decode()} y Hash Calculado: {hashC}')
+            if hashC == hash.decode():
+                self.sock.send(b'Recibido correctamente')
+                print('Recibido correctamente')
+            else:
+                self.sock.send(b'Recibido incorrectamente')
+                print('Recibido incorrectamente')
+
         except Exception as e:
             print('Exception', e)
             pass

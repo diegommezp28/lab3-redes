@@ -41,6 +41,7 @@ class Client(Thread):
         self.packetList = list()  # Packet List as buffer to save data as the packet to be sent
         self.window_end = windowSize
         self.sequenceNumber = 0  # default sequence Number to divide file
+        self.hash = ""
 
     def divideFile(self, mss, filename, sequenceNumber):
         #k = list()
@@ -51,6 +52,8 @@ class Client(Thread):
             data = binary_file.read()
             # Seek position and read N bytes
             i = 0
+            # Hashing
+            hashing = hashlib.new('sha256')
             length = sys.getsizeof(data)
             while i <= length:
                 binary_file.seek(i)  # Go to beginning
@@ -62,19 +65,28 @@ class Client(Thread):
                 else:
                     self.packetList.append(
                         Packet(sequenceNumber, couple_bytes, 0))
+                hashing.update(couple_bytes)
                 i += mss
                 temp = int(sequenceNumber, 2) + 1
                 sequenceNumber = format(temp, '032b')
             print('Termina de dividir ' + filename)
+            self.hash = hashing.hexdigest()
+            print(f'Hash calculado: {self.hash}')
         return self.packetList
 
     def send(self):
         sendingData = self.divideFile(
             self.mss, self.file_to_send, self.sequenceNumber)
         print('Empieza a enviar')
+        start_time = time.time()
         for sendingPkt in sendingData:
             self.sock.sendto(pickle.dumps(sendingPkt), self.address)
         print('Termina de enviar')
+        time.sleep(0.03)
+        print('Enviando Hash')
+        self.sock.sendto(b'HASH', self.address)
+        time.sleep(0.03)
+        self.sock.sendto(str.encode(self.hash), self.address)
         self.sock.close()
 
     def run(self):
