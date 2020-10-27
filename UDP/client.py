@@ -55,6 +55,7 @@ class Client:
         file_sended = repr(data).replace("b'", '').replace("'", "")
         print('Esperando archivo ', file_sended)
 
+        # Crea directorios
         data, address = self.sock.recvfrom(bufsize)
         filepath = folder+'/'+str(newPORT)+'/'
         if not os.path.exists(os.path.dirname(filepath)):
@@ -68,8 +69,11 @@ class Client:
         i = 0
         while(data != b'Empezando a transmitir'):
             continue
+        # Empieza a recibir
         print('Empezando recepción')
         hash = ''
+        brecibidos = 0
+        paquetes_recibidos = 0
         try:
             while True:
                 try:
@@ -80,6 +84,8 @@ class Client:
                         break
                     else:
                         data = pickle.loads(data_raw)
+                        brecibidos += len(data.packet)
+                        paquetes_recibidos += 1
 
                 except socket.error:
                     continue
@@ -103,12 +109,17 @@ class Client:
             hashC = hasher.hexdigest()
             print(
                 f'Hash recibido: {hash.decode()} y Hash Calculado: {hashC}')
+            # Veredicto
             if hashC == hash.decode():
                 self.sock.send(b'Recibido correctamente')
                 print('Recibido correctamente')
             else:
                 self.sock.send(b'Recibido incorrectamente')
                 print('Recibido incorrectamente')
+
+            # Cantidad de paquetes recibidos y bytes recibidos
+            self.sock.send(bytes(str(paquetes_recibidos),  encoding='utf-8'))
+            self.sock.send(bytes(str(brecibidos),  encoding='utf-8'))
 
         except Exception as e:
             print('Exception', e)

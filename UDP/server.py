@@ -42,6 +42,9 @@ class Client(Thread):
         self.window_end = windowSize
         self.sequenceNumber = 0  # default sequence Number to divide file
         self.hash = ""
+        self.file_size = file_size
+        self.file_bytes = 0
+        self.file_packs = 0
 
     def divideFile(self, mss, filename, sequenceNumber):
         #k = list()
@@ -58,6 +61,8 @@ class Client(Thread):
             while i <= length:
                 binary_file.seek(i)  # Go to beginning
                 couple_bytes = binary_file.read(mss)
+                self.file_bytes += len(couple_bytes)
+                self.file_packs += 1
                 if i + mss > length:
                     # adding eof value = 1 for the lastpacket
                     self.packetList.append(
@@ -78,6 +83,7 @@ class Client(Thread):
         sendingData = self.divideFile(
             self.mss, self.file_to_send, self.sequenceNumber)
         print('Empieza a enviar')
+        now = datetime.now()
         start_time = time.time()
         for sendingPkt in sendingData:
             self.sock.sendto(pickle.dumps(sendingPkt), self.address)
@@ -87,7 +93,29 @@ class Client(Thread):
         self.sock.sendto(b'HASH', self.address)
         time.sleep(0.03)
         self.sock.sendto(str.encode(self.hash), self.address)
+
+        # Recibir resultado
+        data, address = self.sock.recvfrom(mss)
+        transfer_time = time.time()
+        rec = data
+        if rec == b'Recibido correctamente':
+            print('Recibido correctamente')
+            exitosa = True
+        else:
+            print('Recibido incorrectamente')
+            exitosa = False
+        # Recibir info de envio
+        data, address = self.sock.recvfrom(mss)
+        recibidos = repr(data).replace("b'", '').replace("'", "")
+        data, address = self.sock.recvfrom(mss)
+        brecibidos = repr(data).replace("b'", '').replace("'", "")
+
         self.sock.close()
+
+        # Registrar en el log
+        logFile = log(self.address, now, exitosa, str(transfer_time-start_time),
+                      self.file_to_send, self.file_size, str(self.file_packs), recibidos, str(self.file_bytes), brecibidos)
+        print("Registro en el log en el archivo " + logFile)
 
     def run(self):
         global faltan
@@ -101,7 +129,7 @@ class Client(Thread):
         while(faltan != 0):
             continue
         self.sock.sendto(b'Empezando a transmitir', self.address)
-        print('Empieza a transmitir')
+        print('Inicio')
         self.send()
 
 
