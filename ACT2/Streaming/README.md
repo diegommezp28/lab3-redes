@@ -13,8 +13,11 @@ A continuación, una breve explicación de esta parte del proyecto y pasos a seg
 
 * Este proyecto usa _OpenCV_ como librería para la lectura y visualización de los videos,
 por ende, es necesario que instale los paquetes especificados en el archivo 
-_requirements.txt_ usando `pip`. Para esto ubíquese en esta carpeta y ejecute: 
-`pip install -r requirements.txt`. Si el paquete de OpenCV por defecto molesta instalando, 
+_requirements.txt_ usando `pip`. Pero, antes de esto, si se está en una máquina con Linux lo más probables es que haya
+que instalar antes el paquete usando apt de la suiente manera: `apt install python3-opecv`, luego si podemos proceder a instalar
+los bindings de OpenCV para Python . Para esto ubíquese en la carpeta 'Streaming' y ejecute: 
+`pip install -r requirements.txt`, en este archivo están los paquetes y versiones necesarias. 
+Si el paquete de OpenCV por defecto molesta instalando, 
 puede instalar _opencv-contrib-python_ como reemplazo, esto ejecutando: 
 `pip install opencv-contrib-python`. 
 
