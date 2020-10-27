@@ -56,7 +56,7 @@ class Client:
         print('Esperando archivo ', file_sended)
 
         data, address = self.sock.recvfrom(bufsize)
-        filepath = folder+'/vm/'+str(newPORT)+'/'
+        filepath = folder+'/'+str(newPORT)+'/'
         if not os.path.exists(os.path.dirname(filepath)):
             try:
                 os.makedirs(os.path.dirname(filepath))
