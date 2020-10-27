@@ -40,9 +40,6 @@ class Client(Thread):
         self.mss = mss
         self.packetList = list()  # Packet List as buffer to save data as the packet to be sent
         self.window_end = windowSize
-        self.unacked = 0
-        self.total_unacked = 0
-        self.timeout = 0.1  # Timeout value for every packet to be sent
         self.sequenceNumber = 0  # default sequence Number to divide file
 
     def divideFile(self, mss, filename, sequenceNumber):
@@ -82,11 +79,13 @@ class Client(Thread):
 
     def run(self):
         global faltan
-        i = 0
-        benviados = 0
+        data, address = self.sock.recvfrom(mss)
+        self.address = address
+        print('Reciví', data)
         # Envía el nombre del archivo
         self.sock.sendto(
             bytes(self.file_to_send, encoding='utf-8'), self.address)
+        print('Envie el nombre del archivo')
         while(faltan != 0):
             continue
         self.sock.sendto(b'Empezando a transmitir', self.address)
@@ -104,6 +103,7 @@ def main():
     global faltan
     faltan = num_con
     direcciones = {}
+    puertoActual = PORT
     if not terminar:
         while faltan != 0:
             print('Esperando...')
@@ -114,8 +114,14 @@ def main():
             if(data == b'Hola servidor' and not ya_conectado):
                 direcciones[dir_pu] = True
                 connected += 1
+                puertoActual += 1
                 faltan = num_con - connected
-                c = Client(s, address, file_to_send, file_size)
+                # Crea Socket particular
+                s2 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                s2.bind((HOST, puertoActual))
+                # Envía el nombre del puerto
+                s.sendto(bytes(str(puertoActual), encoding='utf-8'), address)
+                c = Client(s2, address, file_to_send, file_size)
                 c.start()
                 print("%s:%d se ha conectado." % address)
                 print("Faltan " + str(faltan) + " conexiones")

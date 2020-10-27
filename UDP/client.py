@@ -10,6 +10,8 @@ import signal
 import os
 import timeit
 import threading
+import os
+import errno
 
 from packet import *
 
@@ -37,13 +39,32 @@ class Client:
         print("Soy un cliente")
         global data
         self.sock.send(b'Hola servidor')
+        # Recibe el nuevo puerto
+        data, address = self.sock.recvfrom(bufsize)
+        newPORT = int(repr(data).replace("b'", '').replace("'", ""))
+        print('Nuevo puerto: ', newPORT)
+        self.sock.close()
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.sock.connect((HOST, newPORT))
+        self.sock.send(bytes('Hola servidor, me conecte a ' +
+                             str(newPORT),  encoding='utf-8'))
+
         # Recibe el nombre del archivo
+        print('Esperando nombre archivo')
         data, address = self.sock.recvfrom(bufsize)
         file_sended = repr(data).replace("b'", '').replace("'", "")
         print('Esperando archivo ', file_sended)
 
         data, address = self.sock.recvfrom(bufsize)
-        file = open('./save_content/'+file_sended, 'wb')
+        filepath = './save_content/'+str(newPORT)+'/'
+        if not os.path.exists(os.path.dirname(filepath)):
+            try:
+                os.makedirs(os.path.dirname(filepath))
+            except OSError as exc:  # Guard against race condition
+                if exc.errno != errno.EEXIST:
+                    raise
+
+        file = open(filepath+file_sended, 'wb')
         i = 0
         while(data != b'Empezando a transmitir'):
             continue
